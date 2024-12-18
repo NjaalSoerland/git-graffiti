@@ -1,0 +1,35 @@
+#!/bin/bash
+
+if [ "$#" -ne 5 ]; then
+  echo "Usage: git graffiti <username> <email> <amount> <start-time> <end-time>"
+  echo "Example: git graffiti 'John Doe' 'john@example.com' 10 '2024-01-01T00:00:00' '2024-12-12T23:59:59'"
+  exit 1
+fi
+
+USERNAME="$1"
+EMAIL="$2"
+AMOUNT="$3"
+START_TIME="$4"
+END_TIME="$5"
+
+START_EPOCH=$(date -d "$START_TIME" +%s)
+END_EPOCH=$(date -d "$END_TIME" +%s)
+
+for ((i = 1; i <= AMOUNT; i++)); do
+  RANDOM_TIMESTAMP=$(shuf -i ${START_EPOCH}-${END_EPOCH} -n 1)
+  COMMIT_DATE=$(date -d @${RANDOM_TIMESTAMP} --utc +"%Y-%m-%dT%H:%M:%SZ")
+
+  echo " " >> .txt
+
+  git add .txt
+
+  GIT_AUTHOR_NAME="$USERNAME" GIT_AUTHOR_EMAIL="$EMAIL" \
+  GIT_COMMITTER_NAME="$USERNAME" GIT_COMMITTER_EMAIL="$EMAIL" \
+  GIT_AUTHOR_DATE="$COMMIT_DATE" GIT_COMMITTER_DATE="$COMMIT_DATE" \
+  git commit --date="$COMMIT_DATE" -m "graffiti"
+
+done
+
+git push origin main
+
+echo "Completed $AMOUNT commits between $START_TIME and $END_TIME."
