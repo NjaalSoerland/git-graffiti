@@ -1,6 +1,6 @@
 # Git Graffiti
 
-Git Graffiti is a Git subcommand that allows you to generate fake commit history for a specified user
+Git Graffiti is a Git subcommand that allows you to generate a fake commit history for a specified user
 
 ## Installation
 
